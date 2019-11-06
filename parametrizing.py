@@ -27,6 +27,6 @@ data["Threshold on two"] = data.iloc[:,1].apply(lambda x:1 if (x<=max_val_two an
 plt.plot(data.iloc[:,1])
 plt.savefig('foo.jpeg')
 plt.close()
-plt.plot(data.iloc[:,1])
+plt.plot(data.iloc[:,2])
 plt.savefig('bar.jpeg')
 plt.close()
