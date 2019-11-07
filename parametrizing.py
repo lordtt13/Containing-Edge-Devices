@@ -30,3 +30,5 @@ plt.close()
 plt.plot(data.iloc[:,2])
 plt.savefig('bar.jpeg')
 plt.close()
+
+data.to_csv("data_new.csv")
