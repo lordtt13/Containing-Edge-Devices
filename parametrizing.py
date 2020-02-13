@@ -7,7 +7,7 @@ Created on Sat Oct 12 23:55:51 2019
 import pandas as pd
 import matplotlib.pyplot as plt
 
-data = pd.read_csv("data.csv",header = None)
+# data = pd.read_csv("data.csv",header = None)
 
 def threshold(arr,mean_arr,n):
     j = 0.01
@@ -17,6 +17,7 @@ def threshold(arr,mean_arr,n):
         j += 0.01
     return min(excess),max(excess)
 
+"""
 min_val_one , max_val_one = threshold(data.iloc[:,1], data.iloc[:,1].mean(), 0.75)
 min_val_two , max_val_two = threshold(data.iloc[:,1], data.iloc[:,2].mean(), 0.75)
 
@@ -32,3 +33,4 @@ plt.savefig('bar.jpeg')
 plt.close()
 
 data.to_csv("data_new.csv")
+"""
