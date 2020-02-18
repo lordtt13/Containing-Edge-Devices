@@ -10,6 +10,24 @@ import matplotlib.pyplot as plt
 # data = pd.read_csv("data.csv",header = None)
 
 def threshold(arr,mean_arr,n):
+    """
+    
+
+    Parameters
+    ----------
+    arr : data series, can be list, dataframe series
+          Array you want to find the threshold on.
+    mean_arr : float
+        mean of the series
+    n : float (between 0. and 1.)
+        tolerance value, how much of the array should be included within
+
+    Returns
+    -------
+    thresholds : float
+        min and max value of included array inside tolerance array
+
+    """
     j = 0.01
     excess = []
     while(len(excess) < n*len(arr)):
