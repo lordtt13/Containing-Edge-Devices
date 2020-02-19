@@ -6,7 +6,6 @@ Created on Tue Feb 18 19:35:59 2020
 """
 import pickle
 import decimal
-import int
 
 import numpy as np
 import paho.mqtt as mqtt
