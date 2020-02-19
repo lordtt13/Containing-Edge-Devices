@@ -8,7 +8,7 @@ import pickle
 import decimal
 
 import numpy as np
-import paho.mqtt as mqtt
+import paho.mqtt.client as mqtt
 import json
 
 from parametrizing import threshold
@@ -18,23 +18,24 @@ MQTT_TOPIC = "threshold"
 
 def append_new(data, point):
     data.append(point)
-    return data.pop(0)
+    data.pop(0)
+    return data
 
 
-def on_connect(client):
+def on_connect(client,userdata,flags,rc):
     print("Connected to the MQTT server")
-    client.subscribe(MQTT_TOPIC)
+    client.subscribe(MQTT_TOPIC,0)
 
 
-def on_message_recieve(client, _, msg):
+def on_message(client, _, msg):
     if msg.payload == 'Q':
         client.disconnect();
         print("Modules disconnected");
     elif msg.payload == 'crit':
-        print("Critical condition due to sensor errors")
-        client.disconnect();
+        print("");
+        #print("Critical condition due to sensor errors")
     else:
-        data = json.loads(msg,parse_float=decimal.Decimal,parse_int=integer)
+        data = json.loads(msg.payload)
         process(data)
 
 def process(dict_new):
@@ -42,13 +43,15 @@ def process(dict_new):
                             pickle.load(open("data_humid.pickle", "rb"))
     for key, value in dict_new.items():
         if (key == "Temperature"):
-            append_new(data_temp, value)
+            print(dict_new)
+            data_temp=append_new(data_temp, value)
+            print(data_temp)
             pickle_out = open("./data_temp.pickle", "wb")
             pickle.dump(data_temp, pickle_out)
             pickle_out.close()
             print(threshold(data_temp, np.mean(data_temp), 0.75))
         else:
-            append_new(data_humid, value)
+            data_humid=append_new(data_humid, value)
             pickle_out = open("data_humid.pickle", "wb")
             pickle.dump(data_humid, pickle_out)
             pickle_out.close()
@@ -57,9 +60,10 @@ def process(dict_new):
 
 if __name__ == "__main__":
     client = mqtt.Client()
-    client.connect("localhost", 1883, 60)
 
     client.on_connect = on_connect
-    client.on_message = on_message_recieve
+    client.on_message = on_message
+	
+    client.connect("localhost",1883,60)
 
     client.loop_forever()

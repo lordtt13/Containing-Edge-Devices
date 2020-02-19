@@ -4,8 +4,6 @@ Created on Sat Oct 12 23:55:51 2019
 
 @author: tanma
 """
-import pandas as pd
-import matplotlib.pyplot as plt
 
 # data = pd.read_csv("data.csv",header = None)
 

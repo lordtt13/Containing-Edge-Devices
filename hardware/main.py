@@ -3,7 +3,7 @@ import signal
 import time
 
 import RPi.GPIO as GPIO
-import paho.mqtt as mqtt
+import paho.mqtt.client as mqtt
 
 import dht11
 
@@ -11,24 +11,24 @@ import dht11
 MQTT_TOPIC = "threshold"
 
 # Initialize GPIOs of Raspi
-GPIO.setwarnings(False)
+GPIO.setwarnings(True)
 GPIO.setmode(GPIO.BCM)
-GPIO.cleanup()
 
 if __name__ == "__main__":
     # Initialize all the modules connected to RPI here
-    dht11Module = dht11.DHT11(pin=14)
+    dht11Module = dht11.DHT11(pin=17)
 
     # MQTT server init
     client = mqtt.Client()
 
-    client.connect("localhost", 1883, 60)
+    client.connect("127.0.0.1", 1883, 60)
 
 
     def shutdown(signal_num, frame):
         print("Shutting down publisher")
         client.publish(MQTT_TOPIC, "Q")
         client.disconnect()
+        GPIO.cleanup()
         exit()
 
 
@@ -43,11 +43,12 @@ if __name__ == "__main__":
         if dht11_result.is_valid():
             data_dict["Temperature"] = dht11_result.temperature
             data_dict["Humidity"] = dht11_result.humidity
+	    print(data_dict)
+   	    data_json = json.dumps(data_dict, indent=4)
+            client.publish(MQTT_TOPIC, data_json)
+
         else:
             print("Error: %d" % dht11_result.error_code)
             client.publish(MQTT_TOPIC, "crit");
 
-        data_json = json.dump(data_dict, indent=4)
-
-        client.publish(MQTT_TOPIC, data_json)
-        time.sleep(1)
+        time.sleep(0.8)
