@@ -4,6 +4,7 @@ Created on Tue Feb 18 19:35:59 2020
 
 @author: Tanmay Thakur
 """
+import pickle
 import numpy as np
 
 from parametrizing import threshold
@@ -16,7 +17,7 @@ def append_new(data, point):
     return data.pop(0)
 
     
-data_temp, data_humid = [0 for _ in range(timestep)], [0 for _ in range(timestep)]
+data_temp, data_humid = pickle.load(open( "data_temp.pickle", "rb" )), pickle.load(open( "data_humid.pickle", "rb" ))
 
 for _ in range(timestep):
     # dict_new = function_call()
